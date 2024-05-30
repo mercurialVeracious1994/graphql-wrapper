@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["es2020"],
+    "target": "esnext",
+    "module": "esnext",                                  /* Specify what module code is generated. */
+    "esModuleInterop": true,
+    "types": ["node"],
+    "moduleResolution": "node",
+  },
+  "include": [
+    "./**/*.ts", "./src"
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "exclude": ["node_modules"]
+}
