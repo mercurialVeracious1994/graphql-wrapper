@@ -1,5 +1,5 @@
 import {IProduct} from "../interface/Product";
-import {IPost, IUser, PostInput, PostUpdateInput} from "../interface/Blog";
+import {IPost, IUser, PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
 import axios from "axios";
 import {API_URL} from "../../config";
 
@@ -9,7 +9,9 @@ interface IBlogService {
     getPostById(id: string): Promise<IPost>,
     getAllPosts(): Promise<IPost[]>,
     createPost(input: PostInput): Promise<IPost>,
-    updatePost(input: PostUpdateInput, id: string): Promise<IPost>
+    createUser(input: UserInput): Promise<IUser>,
+    updateUser(input: UserInput,id: string):Promise<IUser>,
+    updatePost(input: PostUpdateInput, id: string): Promise<IPost>,
 }
 const baseURL = API_URL;
 export const BlogService: IBlogService = {
@@ -42,5 +44,15 @@ export const BlogService: IBlogService = {
         const response =
             await axios.patch(`${baseURL}/posts?id=${id}`, {...postUpdateInput}) ;
         return response.data.post as IPost;
+    },
+    createUser: async (userInput: UserInput): Promise<IUser> =>{
+        const response =
+            await axios.post(`${baseURL}/users`, {...userInput}) ;
+        return response.data.user as IUser;
+    },
+    updateUser: async (userUpdateInput: UserInput, id: string): Promise<IUser> => {
+        const response =
+            await axios.patch(`${baseURL}/users?id=${id}`, {...userUpdateInput}) ;
+        return response.data.user as IUser;
     }
 }

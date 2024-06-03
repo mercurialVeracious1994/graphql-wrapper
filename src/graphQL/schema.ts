@@ -17,7 +17,7 @@ export const typeDefs = gql`
     type User {
         id: ID!
         name: String!
-        posts: [Post!]!
+        posts: [Post!]
     }
 
     type Post {
@@ -25,21 +25,21 @@ export const typeDefs = gql`
         title: String!
         content: String!
         isPublished: Boolean!
-        author: User!
+        user: User
     }
     input PostInput {
-        title: String!
-        content: String!
-        isPublished: Boolean!
-        authorId: String!
+        title: String
+        content: String
+        isPublished: Boolean
+        authorId: String
     }
     input UserInput {
-        name: String!
-        postId: String!
+        name: String
     }
     type Mutation {
         addPost(input: PostInput!): Post!
-#        addUser(input: UserInput!): User
+        addUser(input: UserInput!): User!
+        updateUser(input: UserInput,id: ID!): User!
         updatePost(input:PostInput, id: ID!): Post!
     }
 `

@@ -1,8 +1,6 @@
 export interface IUser{
-
     id: string,
     name: string,
-    posts: IPost[]
 }
 
 export interface IPost {
@@ -18,4 +16,6 @@ export interface PostInput extends Omit<IPost, 'id' | 'author'> {
 }
 
 export type PostUpdateInput = Partial<PostInput>
+
+export type UserInput = Omit<IUser, 'id'>
 
