@@ -1,13 +1,12 @@
 import axios from 'axios';
+// @ts-ignore
 import {API_URL} from "../../config";
 import {IProduct} from "../interface/Product";
-const baseURL = API_URL;
 
+const baseURL = API_URL;
 interface IProductService {
     getById(id: string): Promise<IProduct>
-
     getAllProducts(): Promise<IProduct[]>
-
    }
 
 export const ProductService: IProductService = {
