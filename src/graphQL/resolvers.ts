@@ -1,6 +1,7 @@
 import {ProductService} from "../service/ProductService";
-import {BlogService} from "../service/BlogService";
+import {PostService} from "../service/PostService";
 import {PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
+import {UserService} from "../service/UserService";
 
 export const resolvers = {
     Query:{
@@ -11,30 +12,30 @@ export const resolvers = {
             return await ProductService.getById(args.id);
         },
         user:async (_, args) => {
-            return await BlogService.getUserById(args.id);
+            return await UserService.getUserById(args.id);
         },
         users: async() =>{
-            return await BlogService.getAllUsers();
+            return await UserService.getAllUsers();
         },
         post:async (_, args) => {
-            return await BlogService.getPostById(args.id);
+            return await PostService.getPostById(args.id);
         },
         posts: async() =>{
-            return await BlogService.getAllPosts();
+            return await PostService.getAllPosts();
         }
     },
     Mutation:{
         addPost: async (_, args:{input: PostInput}) => {
-            return await BlogService.createPost({...args.input})
+            return await PostService.createPost({...args.input})
         },
         updatePost: async (_, args: {input: PostUpdateInput, id: string}) =>{
-            return await BlogService.updatePost({...args.input},args.id);
+            return await PostService.updatePost({...args.input},args.id);
         },
         addUser: async (_, args:{input: UserInput}) => {
-            return await BlogService.createUser({...args.input})
+            return await UserService.createUser({...args.input})
         },
         updateUser: async (_, args: {input: UserInput, id: string}) =>{
-            return await BlogService.updateUser({...args.input},args.id);
+            return await UserService.updateUser({...args.input},args.id);
         },
     }
 }
