@@ -20,7 +20,7 @@ export const typeDefs = gql`
         posts: [Post!]
     }
 
-    type Post {
+    type Post @cacheControl(maxAge: 3600, scope: PUBLIC){
         id: ID!
         title: String!
         content: String!
@@ -42,4 +42,14 @@ export const typeDefs = gql`
         updateUser(input: UserInput,id: ID!): User!
         updatePost(input:PostInput, id: ID!): Post!
     }
+    enum CacheControlScope {
+        PUBLIC
+        PRIVATE
+    }
+
+    directive @cacheControl(
+        maxAge: Int
+        scope: CacheControlScope
+        inheritMaxAge: Boolean
+    ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 `

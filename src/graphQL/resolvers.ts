@@ -1,5 +1,5 @@
 import {ProductService} from "../service/ProductService";
-import {PostService} from "../service/PostService";
+import {PostService, PostServiceCache} from "../service/PostService";
 import {PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
 import {UserService} from "../service/UserService";
 
@@ -17,19 +17,19 @@ export const resolvers = {
         users: async() =>{
             return await UserService.getAllUsers();
         },
-        post:async (_, args) => {
-            return await PostService.getPostById(args.id);
+        post:async (_, {id},{dataSources}) => {
+            return await dataSources.postAPI.getPostById(id);
         },
-        posts: async() =>{
-            return await PostService.getAllPosts();
+        posts: async(_,__,{dataSources}) =>{
+            return await dataSources.postAPI.getAllPosts();
         }
     },
     Mutation:{
-        addPost: async (_, args:{input: PostInput}) => {
-            return await PostService.createPost({...args.input})
+        addPost: async (_, args:{input: PostInput},{dataSources}) => {
+            return await dataSources.postAPI.createPost({...args.input})
         },
-        updatePost: async (_, args: {input: PostUpdateInput, id: string}) =>{
-            return await PostService.updatePost({...args.input},args.id);
+        updatePost: async (_, args: {input: PostUpdateInput, id: string}, {dataSources}) =>{
+            return await dataSources.postAPI.updatePost({...args.input},args.id);
         },
         addUser: async (_, args:{input: UserInput}) => {
             return await UserService.createUser({...args.input})
