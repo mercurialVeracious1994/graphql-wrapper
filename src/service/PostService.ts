@@ -1,7 +1,8 @@
-import {IPost, PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
+import { IPost, PostInput, PostUpdateInput} from "../interface/Blog";
 import {RESTDataSource} from 'apollo-datasource-rest'
 import axios from "axios";
 import {API_URL} from "../../config";
+
 
 interface IPostService {
     getPostById(id: string): Promise<IPost>,
@@ -11,17 +12,19 @@ interface IPostService {
     createPost(input: PostInput): Promise<IPost>,
 
     updatePost(input: PostUpdateInput, id: string): Promise<IPost>,
+
+    getPostsPagination(page: number, limit: number): Promise<IPost[]>
 }
 
 const baseURL = API_URL;
 
-const getPaginatedData = (page: number, limit: number, response:  IPost[] )=> {
+const getPaginatedData = (page: number, limit: number, response: IPost[]) => {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     return response.slice(startIndex, endIndex) as IPost[];
 }
 
-export class PostServiceCache extends RESTDataSource implements IPostService{
+export class PostServiceCache extends RESTDataSource implements IPostService {
     constructor() {
         super();
         this.baseURL = API_URL;
@@ -34,7 +37,7 @@ export class PostServiceCache extends RESTDataSource implements IPostService{
             return cachedKey.post;
         }
         const response =
-            await this.get(`${baseURL}/posts/${id}`) as {post: IPost};
+            await this.get(`${baseURL}/posts/${id}`) as { post: IPost };
         console.log("Real data ");
         return response.post;
     }
@@ -47,9 +50,10 @@ export class PostServiceCache extends RESTDataSource implements IPostService{
         }
         console.log("Real data ");
         const response =
-            await this.get(`${baseURL}/posts`) as {posts: IPost[]}
+            await this.get(`${baseURL}/posts`) as { posts: IPost[] }
         return response.posts as IPost[];
     }
+
     async getPostsPagination(page: number, limit: number): Promise<IPost[]> {
         const cachedKey = await this.memoizedResults.get(`${baseURL}/posts`);
         if (cachedKey) {
@@ -58,18 +62,19 @@ export class PostServiceCache extends RESTDataSource implements IPostService{
         }
         console.log("Real data ");
         const response =
-            await this.get(`${baseURL}/posts`) as {posts: IPost[]}
+            await this.get(`${baseURL}/posts`) as { posts: IPost[] }
         return getPaginatedData(page, limit, response.posts);
     }
 
-    async createPost (postInput: PostInput):Promise<IPost> {
+    async createPost(postInput: PostInput): Promise<IPost> {
         const cacheKey = await this.memoizedResults.get(`${baseURL}/posts/`);
         this.memoizedResults.delete(cacheKey);
         const response =
             await this.post(`${baseURL}/posts`, {...postInput});
         return response.data.post as IPost;
     }
-    async updatePost (postUpdateInput: PostInput, id: string): Promise<IPost> {
+
+    async updatePost(postUpdateInput: PostInput, id: string): Promise<IPost> {
         const cacheKey = await this.memoizedResults.get(`${baseURL}/posts/`);
         this.memoizedResults.delete(cacheKey);
         const response =

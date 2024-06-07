@@ -5,6 +5,22 @@ export const typeDefs = gql`
         id: String,
         price: Float
     }
+
+    type ProductEdge {
+        node: Product
+        cursor: String
+    }
+    type PageInfo {
+        endCursor: String!
+        hasNextPage: Boolean!
+        hasPreviousPage: Boolean!
+        startCursor: String
+    }
+    type ProductConnection {
+        totalCount: Int!
+        pageInfo: PageInfo!
+        edges: [ProductEdge]
+    }
     type Query {
         users: [User!]!
         user(id: ID!): User
@@ -12,6 +28,7 @@ export const typeDefs = gql`
         postsPagination(limit: Int!, page: Int!): [Post!]!
         post(id: ID!): Post
         products: [Product]
+        productPagination(cursor: String!, first: Int!): ProductConnection
         product(id: ID!): Product
     }
 
@@ -46,10 +63,10 @@ export const typeDefs = gql`
         updateUser(input: UserInput,id: ID!): User!
         updatePost(input:PostInput, id: ID!): Post!
     }
-    enum CacheControlScope {
-        PUBLIC
-        PRIVATE
-    }
+#    enum CacheControlScope {
+#        PUBLIC
+#        PRIVATE
+#    }
 
 #    directive @cacheControl(
 #        maxAge: Int

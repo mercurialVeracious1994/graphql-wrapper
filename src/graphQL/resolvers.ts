@@ -1,14 +1,13 @@
-import {ProductService} from "../service/ProductService";
 import {PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
 import {UserService} from "../service/UserService";
 
 export const resolvers = {
     Query:{
-        products: async () => {
-            return await ProductService.getAllProducts();
+        products: async (_, __, {dataSources}) => {
+            return await dataSources.productAPI.getAllProducts();
         },
-        product: async (_, args) => {
-            return await ProductService.getById(args.id);
+        product: async (_, {id}, {dataSources}) => {
+            return await dataSources.productAPI.getById(id);
         },
         user:async (_, args) => {
             return await UserService.getUserById(args.id);
@@ -22,6 +21,10 @@ export const resolvers = {
         postsPagination:async (_,args, {dataSources}) =>{
             const {page, limit} = args;
             return await dataSources.postAPI.getPostsPagination(page, limit);
+        },
+        productPagination: async (_,args, {dataSources}) =>{
+            const {cursor, first} = args;
+            return await dataSources.productAPI.getProductCursorPagination(cursor, first);
         },
         posts: async(_,__,{dataSources}) =>{
             return await dataSources.postAPI.getAllPosts();
