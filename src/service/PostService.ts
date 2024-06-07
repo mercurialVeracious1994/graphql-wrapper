@@ -14,6 +14,13 @@ interface IPostService {
 }
 
 const baseURL = API_URL;
+
+const getPaginatedData = (page: number, limit: number, response:  IPost[] )=> {
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    return response.slice(startIndex, endIndex) as IPost[];
+}
+
 export class PostServiceCache extends RESTDataSource implements IPostService{
     constructor() {
         super();
@@ -42,6 +49,17 @@ export class PostServiceCache extends RESTDataSource implements IPostService{
         const response =
             await this.get(`${baseURL}/posts`) as {posts: IPost[]}
         return response.posts as IPost[];
+    }
+    async getPostsPagination(page: number, limit: number): Promise<IPost[]> {
+        const cachedKey = await this.memoizedResults.get(`${baseURL}/posts`);
+        if (cachedKey) {
+            console.log("Cache data ");
+            return getPaginatedData(page, limit, cachedKey.posts);
+        }
+        console.log("Real data ");
+        const response =
+            await this.get(`${baseURL}/posts`) as {posts: IPost[]}
+        return getPaginatedData(page, limit, response.posts);
     }
 
     async createPost (postInput: PostInput):Promise<IPost> {

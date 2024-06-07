@@ -9,6 +9,7 @@ export const typeDefs = gql`
         users: [User!]!
         user(id: ID!): User
         posts: [Post!]!
+        postsPagination(limit: Int!, page: Int!): [Post!]!
         post(id: ID!): Post
         products: [Product]
         product(id: ID!): Product
@@ -20,13 +21,16 @@ export const typeDefs = gql`
         posts: [Post!]
     }
 
-    type Post @cacheControl(maxAge: 3600, scope: PUBLIC){
+    type Post {
         id: ID!
         title: String!
         content: String!
         isPublished: Boolean!
         user: User
     }
+    
+#    @cacheControl(maxAge: 3600, scope: PUBLIC)
+    
     input PostInput {
         title: String
         content: String
@@ -47,9 +51,9 @@ export const typeDefs = gql`
         PRIVATE
     }
 
-    directive @cacheControl(
-        maxAge: Int
-        scope: CacheControlScope
-        inheritMaxAge: Boolean
-    ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+#    directive @cacheControl(
+#        maxAge: Int
+#        scope: CacheControlScope
+#        inheritMaxAge: Boolean
+#    ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 `

@@ -1,5 +1,4 @@
 import {ProductService} from "../service/ProductService";
-import {PostService, PostServiceCache} from "../service/PostService";
 import {PostInput, PostUpdateInput, UserInput} from "../interface/Blog";
 import {UserService} from "../service/UserService";
 
@@ -19,6 +18,10 @@ export const resolvers = {
         },
         post:async (_, {id},{dataSources}) => {
             return await dataSources.postAPI.getPostById(id);
+        },
+        postsPagination:async (_,args, {dataSources}) =>{
+            const {page, limit} = args;
+            return await dataSources.postAPI.getPostsPagination(page, limit);
         },
         posts: async(_,__,{dataSources}) =>{
             return await dataSources.postAPI.getAllPosts();
